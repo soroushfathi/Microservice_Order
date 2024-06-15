@@ -1,12 +1,12 @@
-version: "3.9"
+version: "3.3"
 
 services:
 
   db:
     image: postgres:14.1
-    container_name: postgres
+    container_name: db_order
     ports:
-      - 5432:5432
+      - 9200:5432
     environment:
       - POSTGRES_DB=orderservice
       - POSTGRES_USER=puser
@@ -22,22 +22,22 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: 'pg_pass'
     ports:
-      - "5050:80"
+      - "9202:80"
 
-  rabbitmq:
-    image: "rabbitmq:alpine"
-    container_name: rabbitmq
-    healthcheck:
-      test: rabbitmq-diagnostics -q ping
-      interval: 30s
-      timeout: 30s
-      retries: 3
+  #rabbitmq:
+  #  image: "rabbitmq:alpine"
+  #  container_name: rabbitmq
+  #  healthcheck:
+  #    test: rabbitmq-diagnostics -q ping
+  #    interval: 30s
+  #    timeout: 30s
+  #    retries: 3
 
   redis:
     image: redis:7
-    container_name: redis
+    container_name: redis_order
     ports:
-      - 6379:6379
+      - 9206:6379
     volumes:
       - redis-data:/data
 
