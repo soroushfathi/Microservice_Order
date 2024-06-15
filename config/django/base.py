@@ -18,6 +18,7 @@ LOCAL_APPS = [
     'orderservice.common.apps.CommonConfig',
     'orderservice.users.apps.UsersConfig',
     'orderservice.authentication.apps.AuthenticationConfig',
+    'orderservice.order.apps.OrderConfig'
 ]
 
 THIRD_PARTY_APPS = [
