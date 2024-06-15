@@ -12,4 +12,5 @@ python manage.py collectstatic --noinput
 
 # Start server
 echo "--> Starting web process"
+cd OrderService
 gunicorn config.wsgi:application -b 0.0.0.0:8000
