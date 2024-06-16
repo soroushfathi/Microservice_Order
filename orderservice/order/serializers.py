@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from .models import Order
 
 class OrderCreateSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
