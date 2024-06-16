@@ -54,3 +54,23 @@ class ProductService:
             logger.error(f"Error fetching product price: {e}")
             return None
 
+    def update_product_stock(self, product_data, quantity):
+        self.login()
+
+        url = f"{self.base_url}/products/{product_data['id']}/"
+        headers = self._get_headers()
+        data = {
+            'name': product_data['name'],
+            'description': product_data['description'],
+            'price': product_data['price'],
+            'stock': product_data['stock'] - quantity,
+        }
+        try:
+            response = requests.put(url, headers=headers, data=data)
+            response.raise_for_status()
+            result = response.json()
+            return result
+        except requests.RequestException as e:
+            logger.error(f"Error update the product stock: {e}")
+            return None
+
