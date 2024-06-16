@@ -30,4 +30,4 @@ def format_response(
         'metadata': metadata
     }
     # Remove keys with None values for a cleaner response
-    return {K:v for k, v in response.items() if v is not None}
+    return {k:v for k, v in response.items() if v is not None}
