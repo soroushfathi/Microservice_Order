@@ -7,7 +7,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from orderservice.api.utils import format_response
 from orderservice.utils.product_service import ProductService
-from .serializers import OrderCreateSerializer
+from .services import create_order
+from .serializers import OrderSerializer, OrderCreateSerializer
 
 
 product_service = ProductService()
@@ -35,12 +36,20 @@ class CreateOrder(APIView):
             return Response(fresponse, statuss=status.HTTP_404_NOT_FOUND)
 
         product_data = product['data']
-        if quantity > product_data['stock']:
+        product_stock = product_data['stock']
+        product_price = float(product_data['price'])
+        if quantity > product_stock:
             fresponse = format_response(success=False,
                     message="Not Available Stock for this product")
             return Response(fresponse, status=status.HTTP_400_BAD_REQUEST)
 
-        total_price = quantity * float(product_data['price'])
+        order = create_order(product_id, product_price, quantity)
 
-        # Save Order
-        ...
+        #TODO: Decrease stock
+
+        order_serializer = OrderSerializer(order)
+        fresponse = format_response(success=True,
+                data=order_serializer.data,
+                message="Order Has been created successfully.")
+        return Response(fresponse, status=status.HTTP_200_OK)
+
