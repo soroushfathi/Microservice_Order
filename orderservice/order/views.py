@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from drf_spectacular.utils import OpenApiExample, extend_schema
 
 from orderservice.api.utils import format_response
 from orderservice.utils.product_service import ProductService
@@ -14,10 +15,23 @@ from .serializers import OrderSerializer, OrderCreateSerializer
 product_service = ProductService()
 
 
-class CreateOrder(APIView):
+class OrderCreateView(APIView):
     authentication_classes = []
     permission_classes = []
 
+    @extend_schema(
+        request=OrderCreateSerializer,
+        responses={201: OrderSerializer},
+        examples=[
+            OpenApiExample(
+                'Example Input',
+                value={
+                    'product_id': 'ID of a product',
+                    'quantity': 'Quantity of a product'
+                }
+            ),
+        ],
+    )
     def post(self, request):
         serializer = OrderCreateSerializer(data=request.data)
         if not serializer.is_valid():
@@ -27,10 +41,10 @@ class CreateOrder(APIView):
             )
             return Response(fresponse, status=status.HTTP_400_BAD_REQUEST)
 
-        product_id = serializers.validated_data['product_id']
-        quantity = serializers.validated_data['quantity']
+        product_id = serializer.validated_data['product_id']
+        quantity = serializer.validated_data['quantity']
         product = product_service.get_product(product_id=product_id)
-        if not product['status']:
+        if not product['success']:
             fresponse = format_response(success=False,
                     message="Product Not Found")
             return Response(fresponse, statuss=status.HTTP_404_NOT_FOUND)
