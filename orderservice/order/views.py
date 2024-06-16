@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,9 +10,10 @@ from drf_spectacular.utils import OpenApiExample, extend_schema
 from orderservice.api.utils import format_response
 from orderservice.utils.product_service import ProductService
 from .services import create_order
+from .models import Order
 from .serializers import OrderSerializer, OrderCreateSerializer
 
-
+logger = logging.getLogger(__name__)
 product_service = ProductService()
 
 
@@ -66,4 +68,20 @@ class OrderCreateView(APIView):
                 data=order_serializer.data,
                 message="Order Has been created successfully.")
         return Response(fresponse, status=status.HTTP_200_OK)
+
+
+class OrderListView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        try:
+            orders = Order.objects.all()
+            serializer = OrderSerializer(orders, many=True)
+            fresponse = format_response(success=True, data=serializer.data)
+            return Response (fresponse, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Exception of Get Order List: {e}")
+            fresponse = format_response(success=False, message=str(e))
+            return Response(fresponse, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
