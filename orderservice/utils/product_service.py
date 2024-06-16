@@ -3,16 +3,16 @@ from decimal import Decimal
 from django.conf import settings
 import logging
 import json
+from config.env import env
 
 logger = logging.getLogger(__name__)
-BASE_URL = "http://django_product:8000/api"
 
 
 class ProductService:
     def __init__(self):
-        self.email     = 'admin@admin.com'
-        self.password  = '@dmin12345'
-        self.base_url  = 'http://127.0.0.1:8000/api'
+        self.email     = env("PRODUCT_SERVICE_EMAIL")
+        self.password  = env("PRODUCT_SERVICE_PASSWORD")
+        self.base_url  = env("PRODUCT_SERVICE_BASE_URL")
         self.jwt_token = None
 
     def _get_headers(self):
