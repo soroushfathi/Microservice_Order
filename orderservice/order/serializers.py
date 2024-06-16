@@ -15,3 +15,9 @@ class OrderCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError("Quantity must be a positive integer.")
         return value
 
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['id', 'product_id', 'quantity', 'total_price']
+
