@@ -13,6 +13,7 @@ from .services import create_order
 from .selectors import get_order_by_id, get_all_orders
 from .models import Order
 from .serializers import OrderSerializer, OrderCreateSerializer
+from .producer import publish
 
 logger = logging.getLogger(__name__)
 product_service = ProductService()
@@ -66,6 +67,10 @@ class OrderCreateView(APIView):
         productupdate_response = product_service.update_product_stock(
                 product_data, quantity)
         logger.info("Update product stock result: %s" % (productupdate_response))
+
+        # Test Rabbitmq
+        # publish('create_order', product_data)
+
         order_serializer = OrderSerializer(order)
         fresponse = format_response(success=True,
                 data=order_serializer.data,
