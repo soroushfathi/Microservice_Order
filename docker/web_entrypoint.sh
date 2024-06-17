@@ -3,7 +3,7 @@
 echo "--> Waiting for db to be ready"
 ./wait-for-it.sh db:5432
 
-cd OrderService
+# cd OrderService
 
 # Apply database migrations
 echo "Apply database migrations"

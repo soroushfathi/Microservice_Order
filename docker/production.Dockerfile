@@ -9,4 +9,5 @@ RUN pip install -r requirements/production.txt
 # Get the django project into the docker container
 RUN mkdir /app
 WORKDIR /app
+RUN ls
 ADD ./ /app/
