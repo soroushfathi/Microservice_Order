@@ -62,8 +62,10 @@ class OrderCreateView(APIView):
 
         order = create_order(product_id, product_price, quantity)
 
-        #TODO: Decrease stock
-
+        # Update Product Stock
+        productupdate_response = product_service.update_product_stock(
+                product_data, quantity)
+        logger.info("Update product stock result: %s" % (productupdate_response))
         order_serializer = OrderSerializer(order)
         fresponse = format_response(success=True,
                 data=order_serializer.data,

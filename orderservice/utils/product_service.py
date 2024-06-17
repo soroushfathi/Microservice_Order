@@ -59,14 +59,13 @@ class ProductService:
 
         url = f"{self.base_url}/products/{product_data['id']}/"
         headers = self._get_headers()
-        data = {
-            'name': product_data['name'],
-            'description': product_data['description'],
-            'price': product_data['price'],
-            'stock': product_data['stock'] - quantity,
-        }
+        headers['Content-Type'] = 'application/x-www-form-urlencoded'
+        payload = 'description={}&name={}&price={}&stock={}'.format(
+            product_data['description'], product_data['name'],
+            product_data['price'], product_data['stock'] - quantity
+        )
         try:
-            response = requests.put(url, headers=headers, data=data)
+            response = requests.put(url, headers=headers, data=payload)
             response.raise_for_status()
             result = response.json()
             return result
